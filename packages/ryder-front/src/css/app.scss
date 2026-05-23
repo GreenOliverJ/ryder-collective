@@ -1,0 +1,80 @@
+body {
+  background: #0a0e14;
+}
+
+.stage-surface {
+  position: relative;
+  border-radius: 12px;
+  background: linear-gradient(180deg, #1a2332 0%, #121820 100%);
+  border: 2px solid rgba(124, 77, 255, 0.35);
+  overflow: hidden;
+  touch-action: none;
+}
+
+.stage-audience {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.35);
+  background: rgba(0, 0, 0, 0.25);
+}
+
+.stage-audience--bottom {
+  bottom: 0;
+}
+
+.stage-audience--top {
+  top: 0;
+}
+
+.musician-marker {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  cursor: pointer;
+  z-index: 2;
+  transition: box-shadow 0.15s ease;
+}
+
+.musician-marker--selected {
+  z-index: 3;
+}
+
+.musician-marker__dot {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 14px;
+  color: #fff;
+  border: 2px solid rgba(255, 255, 255, 0.85);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.45);
+}
+
+.musician-marker__label {
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  margin-top: 4px;
+  white-space: nowrap;
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.85);
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.8);
+  pointer-events: none;
+}
+
+.audio-panel {
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}

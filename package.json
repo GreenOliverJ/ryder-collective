@@ -1,0 +1,22 @@
+{
+  "name": "ryder",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Ryder — musicians tech rider monorepo",
+  "workspaces": [
+    "packages/*"
+  ],
+  "scripts": {
+    "dev": "concurrently -n back,front -c blue,green \"npm run dev -w @ryder/backend\" \"npm run dev -w @ryder/front\"",
+    "dev:back": "npm run dev -w @ryder/backend",
+    "dev:front": "npm run dev -w @ryder/front",
+    "build": "npm run build -w @ryder/front",
+    "lint": "npm run lint -w @ryder/backend && npm run lint -w @ryder/front"
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.2"
+  },
+  "engines": {
+    "node": ">=18.16"
+  }
+}

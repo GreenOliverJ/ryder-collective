@@ -1,0 +1,13 @@
+node_modules/
+**/node_modules/
+dist/
+**/.quasar/
+.env
+.env.local
+**/.env
+!**/.env.example
+*.log
+.DS_Store
+coverage/
+uploads/*
+!uploads/.gitkeep
