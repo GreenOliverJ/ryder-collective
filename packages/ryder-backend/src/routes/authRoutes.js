@@ -19,7 +19,7 @@ router.post('/login', asyncHandler(async (req, res) => {
 }))
 
 router.get('/me', requireAuth, asyncHandler(async (req, res) => {
-  const user = await authService.me(req.user._id)
+  const user = await authService.me(req.userId)
   res.json({ user })
 }))
 

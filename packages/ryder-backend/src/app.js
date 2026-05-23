@@ -3,6 +3,7 @@ import cors from 'cors'
 import morgan from 'morgan'
 import path from 'path'
 import { env } from './config/env.js'
+import { corsOptions } from './config/cors.js'
 import authRoutes from './routes/authRoutes.js'
 import riderRoutes from './routes/riderRoutes.js'
 import publicRoutes from './routes/publicRoutes.js'
@@ -16,7 +17,7 @@ export async function createApp () {
   const app = express()
 
   app.use(morgan('dev'))
-  app.use(cors({ origin: env.corsOrigin, credentials: true }))
+  app.use(cors(corsOptions()))
   app.use(express.json({ limit: '2mb' }))
   app.use('/uploads', express.static(path.resolve(process.cwd(), env.uploadDir)))
 

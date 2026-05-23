@@ -1,16 +1,25 @@
 import { boot } from 'quasar/wrappers'
-import axios from 'axios'
+import { api } from 'src/services/api-client'
 import { useAuthStore } from 'src/stores/auth-store'
 
-const api = axios.create({
-  baseURL: import.meta.env.VITE_API_URL || 'http://localhost:4000/api',
-  timeout: 30000
-})
+const AUTH_PATHS = ['/auth/login', '/auth/register']
+
+function isAuthRequest (url = '') {
+  return AUTH_PATHS.some(path => url.includes(path))
+}
 
 api.interceptors.request.use(config => {
-  const auth = useAuthStore()
-  if (auth.token) {
-    config.headers.Authorization = `Bearer ${auth.token}`
+  try {
+    const auth = useAuthStore()
+    if (auth.token) {
+      config.headers.Authorization = `Bearer ${auth.token}`
+    }
+  } catch {
+    // Pinia not ready yet — token read from storage as fallback
+    const token = localStorage.getItem('ryder_token')
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`
+    }
   }
   return config
 })
@@ -18,16 +27,18 @@ api.interceptors.request.use(config => {
 api.interceptors.response.use(
   res => res,
   err => {
-    if (err.response?.status === 401) {
-      const auth = useAuthStore()
-      auth.logout()
+    if (err.response?.status === 401 && !isAuthRequest(err.config?.url)) {
+      try {
+        useAuthStore().logout()
+      } catch {
+        localStorage.removeItem('ryder_token')
+      }
     }
     return Promise.reject(err)
   }
 )
 
 export default boot(({ app }) => {
-  app.config.globalProperties.$axios = axios
   app.config.globalProperties.$api = api
 })
 

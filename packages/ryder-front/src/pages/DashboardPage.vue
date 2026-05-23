@@ -42,7 +42,7 @@
               v-if="r.isPublished"
               flat
               icon="open_in_new"
-              :to="{ name: 'stage-public', params: { handle: auth.user.handle, slug: r.slug } }"
+              :to="{ name: 'stage-public', params: { handle: auth.user?.handle, slug: r.slug } }"
             />
           </q-card-actions>
         </q-card>

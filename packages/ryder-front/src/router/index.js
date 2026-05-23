@@ -10,7 +10,10 @@ const router = createRouter({
 
 router.beforeEach(async (to, from, next) => {
   const auth = useAuthStore()
-  if (auth.token && !auth.user) {
+
+  if (!auth.ready) {
+    await auth.init()
+  } else if (auth.token && !auth.user) {
     await auth.fetchMe()
   }
 

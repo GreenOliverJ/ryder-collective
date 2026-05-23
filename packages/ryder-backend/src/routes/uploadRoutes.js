@@ -41,7 +41,7 @@ router.post(
       return res.status(400).json({ error: 'No audio file provided' })
     }
     const rider = await uploadService.attachAudioToRider(
-      req.user._id,
+      req.userId,
       req.params.riderId,
       req.params.trackId,
       req.file

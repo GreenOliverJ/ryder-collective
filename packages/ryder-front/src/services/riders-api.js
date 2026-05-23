@@ -1,4 +1,4 @@
-import { api } from 'src/boot/axios'
+import { api } from 'src/services/api-client'
 
 export const ridersApi = {
   list: () => api.get('/riders'),

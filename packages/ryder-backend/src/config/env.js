@@ -10,6 +10,7 @@ export const env = {
   mongoUri: process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/ryder',
   jwtSecret: process.env.JWT_SECRET || 'dev-secret-change-in-production',
   jwtExpiresIn: process.env.JWT_EXPIRES_IN || '7d',
-  corsOrigin: process.env.CORS_ORIGIN || 'http://localhost:9000',
-  uploadDir: process.env.UPLOAD_DIR || 'uploads'
+  corsOrigin: process.env.CORS_ORIGIN || 'http://localhost:9000,http://127.0.0.1:9000',
+  uploadDir: process.env.UPLOAD_DIR || 'uploads',
+  isDev: process.env.NODE_ENV !== 'production'
 }

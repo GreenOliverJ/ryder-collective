@@ -2,7 +2,14 @@
   <q-page class="q-pa-md">
     <q-inner-loading :showing="store.loading" />
 
-    <template v-if="store.rider">
+    <q-banner v-if="store.loadError" class="bg-negative text-white q-mb-md" rounded>
+      {{ store.loadError }}
+      <template #action>
+        <q-btn flat label="Back" to="/dashboard" />
+      </template>
+    </q-banner>
+
+    <template v-else-if="store.rider">
       <div class="row items-center q-mb-md q-gutter-sm">
         <q-btn flat round icon="arrow_back" to="/dashboard" />
         <q-input
@@ -28,9 +35,9 @@
         Public URL:
         <router-link
           class="text-white text-weight-bold"
-          :to="{ name: 'stage-public', params: { handle: auth.user.handle, slug: store.rider.slug } }"
+          :to="{ name: 'stage-public', params: { handle: auth.user?.handle, slug: store.rider.slug } }"
         >
-          /stage/{{ auth.user.handle }}/{{ store.rider.slug }}
+          /stage/{{ auth.user?.handle }}/{{ store.rider.slug }}
         </router-link>
         <span v-if="store.rider.publicId" class="q-ml-md">
           Short: /s/{{ store.rider.publicId }}
@@ -123,9 +130,17 @@ const $q = useQuasar()
 const auth = useAuthStore()
 const store = useRiderEditorStore()
 
-onMounted(() => store.load(route.params.id))
+onMounted(() => loadRider())
 
-watch(() => route.params.id, id => store.load(id))
+watch(() => route.params.id, () => loadRider())
+
+async function loadRider () {
+  try {
+    await store.load(route.params.id)
+  } catch {
+    // loadError shown in template
+  }
+}
 
 async function save () {
   try {

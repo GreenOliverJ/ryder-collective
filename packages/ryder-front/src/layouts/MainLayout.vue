@@ -26,13 +26,16 @@
 
 <script setup>
 import { useRouter } from 'vue-router'
+import { useQuasar } from 'quasar'
 import { useAuthStore } from 'src/stores/auth-store'
 
 const auth = useAuthStore()
 const router = useRouter()
+const $q = useQuasar()
 
 function onLogout () {
   auth.logout()
+  $q.notify({ type: 'info', message: 'Logged out' })
   router.push({ name: 'home' })
 }
 </script>

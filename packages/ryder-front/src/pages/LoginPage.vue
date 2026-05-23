@@ -40,7 +40,11 @@ async function onSubmit () {
     await auth.login({ email: email.value, password: password.value })
     router.push(route.query.redirect || '/dashboard')
   } catch (e) {
-    $q.notify({ type: 'negative', message: e.response?.data?.error || 'Login failed' })
+    const msg = e.response?.data?.error
+      || (e.code === 'ERR_NETWORK' ? 'Cannot reach API — is the backend running on port 4000?' : null)
+      || e.message
+      || 'Login failed'
+    $q.notify({ type: 'negative', message: msg })
   } finally {
     loading.value = false
   }

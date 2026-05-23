@@ -1,4 +1,4 @@
-import { api } from 'src/boot/axios'
+import { api } from 'src/services/api-client'
 
 export const publicApi = {
   byHandleSlug: (handle, slug) => api.get(`/public/stage/${handle}/${slug}`),

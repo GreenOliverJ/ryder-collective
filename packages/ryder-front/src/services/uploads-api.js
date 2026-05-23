@@ -1,4 +1,4 @@
-import { api } from 'src/boot/axios'
+import { api } from 'src/services/api-client'
 
 export function uploadTrackAudio (riderId, trackId, file, onProgress) {
   const form = new FormData()

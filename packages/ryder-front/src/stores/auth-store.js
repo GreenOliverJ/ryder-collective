@@ -7,6 +7,7 @@ const TOKEN_KEY = 'ryder_token'
 export const useAuthStore = defineStore('auth', () => {
   const user = ref(null)
   const token = ref(localStorage.getItem(TOKEN_KEY) || '')
+  const ready = ref(false)
 
   const isAuthenticated = computed(() => Boolean(token.value))
 
@@ -46,5 +47,12 @@ export const useAuthStore = defineStore('auth', () => {
     }
   }
 
-  return { user, token, isAuthenticated, register, login, logout, fetchMe }
+  async function init () {
+    if (token.value && !user.value) {
+      await fetchMe()
+    }
+    ready.value = true
+  }
+
+  return { user, token, ready, isAuthenticated, register, login, logout, fetchMe, init }
 })

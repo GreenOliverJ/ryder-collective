@@ -62,7 +62,11 @@ async function onSubmit () {
     })
     router.push('/dashboard')
   } catch (e) {
-    $q.notify({ type: 'negative', message: e.response?.data?.error || 'Registration failed' })
+    const msg = e.response?.data?.error
+      || (e.code === 'ERR_NETWORK' ? 'Cannot reach API — is the backend running on port 4000?' : null)
+      || e.message
+      || 'Registration failed'
+    $q.notify({ type: 'negative', message: msg })
   } finally {
     loading.value = false
   }

@@ -16,6 +16,7 @@ export async function requireAuth (req, res, next) {
       return res.status(401).json({ error: 'User not found' })
     }
     req.user = user
+    req.userId = user._id?.toString?.() || String(user._id)
     next()
   } catch {
     return res.status(401).json({ error: 'Invalid or expired token' })

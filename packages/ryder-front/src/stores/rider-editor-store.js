@@ -10,6 +10,7 @@ export const useRiderEditorStore = defineStore('riderEditor', () => {
   const saving = ref(false)
   const selectedMusicianId = ref(null)
   const dirty = ref(false)
+  const loadError = ref(null)
 
   const musicians = computed(() => rider.value?.musicians ?? [])
   const audioTracks = computed(() => rider.value?.audioTracks ?? [])
@@ -23,12 +24,17 @@ export const useRiderEditorStore = defineStore('riderEditor', () => {
 
   async function load (id) {
     loading.value = true
+    loadError.value = null
     try {
       const { data } = await ridersApi.get(id)
       rider.value = data.rider
       urls.value = data.urls || {}
       selectedMusicianId.value = data.rider.musicians?.[0]?.id ?? null
       dirty.value = false
+    } catch (err) {
+      rider.value = null
+      loadError.value = err.response?.data?.error || err.message || 'Failed to load rider'
+      throw err
     } finally {
       loading.value = false
     }
@@ -130,6 +136,7 @@ export const useRiderEditorStore = defineStore('riderEditor', () => {
     loading,
     saving,
     dirty,
+    loadError,
     selectedMusicianId,
     musicians,
     audioTracks,
