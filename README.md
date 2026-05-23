@@ -83,3 +83,14 @@ Users own many riders (`ownerId`). Slug is unique per user. No SQL joins needed 
 ## Mobile later
 
 Quasar is configured as SPA today. The same codebase can target Capacitor/Cordova via Quasar’s build modes when you are ready for native shells.
+
+## Deploy on Synology NAS (Docker)
+
+Run MongoDB + API + web UI on your NAS so you can share riders on your home network (or via reverse proxy).
+
+1. Copy the repo to the NAS (e.g. `/volume1/docker/ryder-collective`)
+2. `cp .env.production.example .env.production` — set `JWT_SECRET` and `PUBLIC_URL` (your NAS URL)
+3. `docker compose -f docker-compose.prod.yml up -d --build`
+4. Open `PUBLIC_URL` in a browser (default port **8080**)
+
+Full guide: [deploy/synology/README.md](deploy/synology/README.md) — migrate existing MongoDB data, backups, HTTPS, and Container Manager GUI steps.

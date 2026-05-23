@@ -11,3 +11,11 @@ dist/
 coverage/
 uploads/*
 !uploads/.gitkeep
+
+# Production data on NAS / local Docker
+data/mongo/*
+!data/mongo/.gitkeep
+data/uploads/*
+!data/uploads/.gitkeep
+data/backups/
+.env.production

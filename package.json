@@ -11,7 +11,11 @@
     "dev:back": "npm run dev -w @ryder/backend",
     "dev:front": "npm run dev -w @ryder/front",
     "build": "npm run build -w @ryder/front",
-    "lint": "npm run lint -w @ryder/backend && npm run lint -w @ryder/front"
+    "lint": "npm run lint -w @ryder/backend && npm run lint -w @ryder/front",
+    "docker:dev": "docker compose up -d",
+    "docker:prod": "docker compose -f docker-compose.prod.yml --env-file .env.production up -d --build",
+    "docker:prod:down": "docker compose -f docker-compose.prod.yml down",
+    "docker:prod:logs": "docker compose -f docker-compose.prod.yml logs -f"
   },
   "devDependencies": {
     "concurrently": "^9.1.2"
