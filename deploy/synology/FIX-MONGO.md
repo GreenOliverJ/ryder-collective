@@ -1,5 +1,22 @@
 # Fix: `ryder-mongodb` unhealthy / Error
 
+## DS1019+ / no AVX CPU
+
+If logs say **MongoDB 5.0+ requires a CPU with AVX support**:
+
+Your NAS CPU (e.g. Celeron J4125) **cannot run MongoDB 5 or 7**.  
+Production compose uses **`mongo:4.4`** on purpose. Pull latest and recreate:
+
+```bash
+git pull
+sudo docker compose -f docker-compose.prod.yml --env-file .env.production down
+sudo rm -rf data/mongo/*    # old failed 5.x data
+sudo chown -R 999:999 data/mongo
+sudo docker compose -f docker-compose.prod.yml --env-file .env.production up -d --build
+```
+
+---
+
 When compose says:
 
 ```text

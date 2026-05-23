@@ -197,4 +197,5 @@ sudo docker compose -f docker-compose.prod.yml up -d --build
 | Page loads but login fails | `PUBLIC_URL` must match the browser address exactly (scheme + host + port) |
 | Rider not found | Backend up + migrate DB from Mac or register on NAS |
 | Build fails on NAS | Ensure ≥ 2 GB RAM for build; or build images on Mac and push to a registry |
-| ARM NAS (plus models) | `mongo:7` and `node:20-alpine` support ARM64 |
+| **DS1019+ / no AVX CPU** | Production uses `mongo:4.4` — see [FIX-MONGO.md](FIX-MONGO.md) |
+| ARM NAS (plus models) | `node:20-alpine` supports ARM64; use `mongo:4.4` if Mongo 7 fails |
