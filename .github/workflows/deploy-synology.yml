@@ -18,6 +18,7 @@ jobs:
     runs-on: [self-hosted, synology, linux]
     steps:
       - name: Pull and restart Docker stack
-        run: sh /volume1/docker/ryder-collective/deploy/deploy-on-nas.sh
+        run: sh "${RYDER_DEPLOY_DIR}/deploy/deploy-on-nas.sh"
         env:
-          RYDER_DEPLOY_DIR: /volume1/docker/ryder-collective
+          # Change to match File Station → docker → Properties → Location
+          RYDER_DEPLOY_DIR: /volume2/docker/ryder-collective

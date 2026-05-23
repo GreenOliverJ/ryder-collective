@@ -13,7 +13,9 @@ Every push to `main` can redeploy Ryder on your NAS — but only if a **self-hos
 ssh YOUR_DSM_USERNAME@192.168.0.160
 ```
 
-Use the same username/password as DSM / File Station. Your `docker` folder is **`/volume1/docker`**.
+Use the same username/password as DSM / File Station.
+
+**Path tip:** `/volume1` is often empty in SSH — your **docker** share is usually **`/volume2/docker`** on a DS1019+. See [../synology/FIND-YOUR-PATH.md](../synology/FIND-YOUR-PATH.md).
 
 Optional `~/.ssh/config`:
 
@@ -32,8 +34,8 @@ Then: `ssh nas`
 ```bash
 ssh YOUR_DSM_USERNAME@192.168.0.160
 
-sudo mkdir -p /volume1/docker
-cd /volume1/docker
+# Use the folder that contains oracle-xe in File Station — often /volume2/docker
+cd /volume2/docker   # or /volume1/docker — check FIND-YOUR-PATH.md
 git clone https://github.com/GreenOliverJ/ryder-collective.git
 cd ryder-collective
 

@@ -23,9 +23,10 @@ Share links like: `http://YOUR-NAS-IP:8080/stage/demo/demo-gig`
 ssh YOUR_DSM_USERNAME@192.168.0.160
 ```
 
-Your `docker` folder in File Station is **`/volume1/docker`** on the NAS.
+Your **docker** folder in File Station is **not always** `/volume1/docker` — many DS1019+ units use **`/volume2/docker`**.  
+**→ [FIND-YOUR-PATH.md](FIND-YOUR-PATH.md)** — how to find the real path (or use Container Manager GUI only).
 
-**Auto-deploy on every git push:** see [deploy/github-runner/README.md](../github-runner/README.md) (self-hosted GitHub Actions runner).
+**Auto-deploy on every git push:** see [deploy/github-runner/README.md](../github-runner/README.md).
 
 ---
 
@@ -46,16 +47,18 @@ rsync -av --exclude node_modules --exclude data --exclude .git \
   ./ oliver@192.168.0.50:/volume1/docker/ryder-collective/
 ```
 
-Or clone from GitHub on the NAS (SSH):
+Or clone from GitHub on the NAS (SSH) — **use your real docker path**:
 
 ```bash
-ssh oliver@192.168.0.50
-cd /volume1/docker
+ssh YOUR_USER@192.168.0.160
+
+# Find path first (see FIND-YOUR-PATH.md), often one of:
+cd /volume2/docker    # common on DS1019+
+# cd /volume1/docker  # if that is where Properties shows
+
 git clone https://github.com/GreenOliverJ/ryder-collective.git
 cd ryder-collective
 ```
-
-Recommended path: `/volume1/docker/ryder-collective` (easy backups in Hyper Backup).
 
 ---
 
