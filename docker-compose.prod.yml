@@ -1,5 +1,5 @@
 # Production stack for Synology NAS (Container Manager) or any Docker host.
-# Usage: cp .env.production.example .env.production && docker compose -f docker-compose.prod.yml up -d --build
+# Usage: cp .env.production.example .env.production && docker compose -f docker-compose.prod.yml --env-file .env.production up -d --build
 
 services:
   mongodb:
@@ -12,7 +12,12 @@ services:
       - ./data/mongo:/data/db
     networks:
       - ryder
-    # MongoDB is NOT exposed to the LAN — only backend can reach it.
+    healthcheck:
+      test: ['CMD', 'mongosh', '--eval', "db.adminCommand('ping')"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
 
   backend:
     build:
@@ -32,9 +37,15 @@ services:
       - ./data/uploads:/app/packages/ryder-backend/uploads
     depends_on:
       mongodb:
-        condition: service_started
+        condition: service_healthy
     networks:
       - ryder
+    healthcheck:
+      test: ['CMD', 'node', '-e', "require('http').get('http://127.0.0.1:4000/api/health',r=>process.exit(r.statusCode===200?0:1)).on('error',()=>process.exit(1))"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 40s
 
   web:
     build:
@@ -47,7 +58,8 @@ services:
     ports:
       - "${HTTP_PORT:-8080}:80"
     depends_on:
-      - backend
+      backend:
+        condition: service_healthy
     networks:
       - ryder
 

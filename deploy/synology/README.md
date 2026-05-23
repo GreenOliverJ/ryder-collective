@@ -193,7 +193,8 @@ sudo docker compose -f docker-compose.prod.yml up -d --build
 
 | Problem | Fix |
 |---------|-----|
+| **502 on register/login** | [FIX-502.md](FIX-502.md) — backend container not running |
 | Page loads but login fails | `PUBLIC_URL` must match the browser address exactly (scheme + host + port) |
-| 502 / API errors | `docker compose logs backend` — wait for MongoDB to be ready |
+| Rider not found | Backend up + migrate DB from Mac or register on NAS |
 | Build fails on NAS | Ensure ≥ 2 GB RAM for build; or build images on Mac and push to a registry |
 | ARM NAS (plus models) | `mongo:7` and `node:20-alpine` support ARM64 |
