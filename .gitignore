@@ -19,3 +19,5 @@ data/uploads/*
 !data/uploads/.gitkeep
 data/backups/
 .env.production
+deploy/github-runner/.env
+deploy/github-runner/data/

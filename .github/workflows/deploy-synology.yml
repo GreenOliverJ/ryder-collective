@@ -1,0 +1,23 @@
+# Deploys to Synology when code is pushed to main.
+#
+# Requires a self-hosted GitHub Actions runner ON YOUR LAN (same network as the NAS).
+# GitHub's cloud runners cannot reach 192.168.x.x addresses.
+#
+# Setup: deploy/github-runner/README.md
+
+name: Deploy to Synology NAS
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    name: Deploy Ryder on NAS
+    runs-on: [self-hosted, synology, linux]
+    steps:
+      - name: Pull and restart Docker stack
+        run: sh /volume1/docker/ryder-collective/deploy/deploy-on-nas.sh
+        env:
+          RYDER_DEPLOY_DIR: /volume1/docker/ryder-collective

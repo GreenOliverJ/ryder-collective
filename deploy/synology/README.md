@@ -14,6 +14,21 @@ Share links like: `http://YOUR-NAS-IP:8080/stage/demo/demo-gig`
 
 ---
 
+## Connect via terminal (Mac)
+
+1. **Control Panel** → **Terminal & SNMP** → enable **SSH**
+2. From your Mac:
+
+```bash
+ssh YOUR_DSM_USERNAME@192.168.0.160
+```
+
+Your `docker` folder in File Station is **`/volume1/docker`** on the NAS.
+
+**Auto-deploy on every git push:** see [deploy/github-runner/README.md](../github-runner/README.md) (self-hosted GitHub Actions runner).
+
+---
+
 ## 1. Install Container Manager
 
 1. **Package Center** → install **Container Manager**
