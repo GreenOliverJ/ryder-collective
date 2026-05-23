@@ -5,13 +5,17 @@ services:
   mongodb:
     image: mongo:7
     container_name: ryder-mongodb
+    hostname: ryder-mongodb
     restart: unless-stopped
     environment:
       MONGO_INITDB_DATABASE: ryder
     volumes:
       - ./data/mongo:/data/db
     networks:
-      - ryder
+      ryder:
+        aliases:
+          - mongodb
+          - ryder-mongodb
     healthcheck:
       test: ['CMD', 'mongosh', '--eval', "db.adminCommand('ping')"]
       interval: 10s
@@ -28,7 +32,7 @@ services:
     environment:
       NODE_ENV: production
       PORT: 4000
-      MONGODB_URI: mongodb://mongodb:27017/ryder
+      MONGODB_URI: mongodb://ryder-mongodb:27017/ryder
       JWT_SECRET: ${JWT_SECRET}
       JWT_EXPIRES_IN: ${JWT_EXPIRES_IN:-7d}
       CORS_ORIGIN: ${PUBLIC_URL}
@@ -65,4 +69,5 @@ services:
 
 networks:
   ryder:
+    name: ryder-collective-net
     driver: bridge
