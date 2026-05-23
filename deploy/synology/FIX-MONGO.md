@@ -51,6 +51,7 @@ sudo docker logs ryder-mongodb --tail 50
 
 | Log contains | Fix |
 |--------------|-----|
+| `read-only directory` / `lock file on a read-only` | Step 2a (permissions) or **git pull** (uses Docker named volume) |
 | `Permission denied` / `Unable to lock` | Step 2 (permissions) |
 | `No such file` | Step 2 |
 | `WiredTiger` / corruption | Step 3 (reset data) |
@@ -58,16 +59,44 @@ sudo docker logs ryder-mongodb --tail 50
 
 ---
 
-## Step 2 — Fix folder permissions (most common on Synology)
+## Step 2a — `read-only directory: /data/db` (Synology bind mount)
+
+Mongo needs to **write** to its data directory. On DSM this often fails when `./data/mongo` is owned by root or the share ACL blocks user **999**.
+
+**Recommended:** `git pull` — production compose now uses a **Docker named volume** (`ryder-mongo-data`) instead of `./data/mongo`.
 
 ```bash
 cd /volume2/docker/ryder-collective
-sudo mkdir -p data/mongo data/uploads
-sudo chown -R 999:999 data/mongo
-sudo chmod -R 755 data/mongo data/uploads
+git pull
+sudo docker compose -f docker-compose.prod.yml --env-file .env.production down
+sudo docker compose -f docker-compose.prod.yml --env-file .env.production up -d --build
 ```
 
-MongoDB in Docker runs as user **999**.
+**Or** fix the bind mount manually (older compose):
+
+```bash
+cd /volume2/docker/ryder-collective
+sudo docker compose -f docker-compose.prod.yml --env-file .env.production down
+sudo mkdir -p data/mongo
+sudo chown -R 999:999 data/mongo
+sudo chmod -R u+rwX data/mongo
+sudo docker run --rm -u 999:999 -v "$(pwd)/data/mongo:/data/db" mongo:4.4.29 \
+  sh -c 'touch /data/db/.write-test && rm /data/db/.write-test && echo writable'
+```
+
+You must see `writable` before starting Mongo again.
+
+---
+
+## Step 2 — Fix folder permissions (uploads + legacy mongo path)
+
+```bash
+cd /volume2/docker/ryder-collective
+sudo mkdir -p data/uploads
+sudo chmod -R 755 data/uploads
+```
+
+MongoDB in Docker runs as user **999** (only if you still bind-mount `./data/mongo`).
 
 ---
 

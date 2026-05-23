@@ -12,7 +12,8 @@ services:
     environment:
       MONGO_INITDB_DATABASE: ryder
     volumes:
-      - ./data/mongo:/data/db
+      # Named volume avoids Synology bind-mount "read-only /data/db" permission issues.
+      - ryder-mongo-data:/data/db
     networks:
       ryder:
         aliases:
@@ -73,3 +74,6 @@ networks:
   ryder:
     name: ryder-collective-net
     driver: bridge
+
+volumes:
+  ryder-mongo-data:
