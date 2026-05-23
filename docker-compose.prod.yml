@@ -4,10 +4,11 @@
 services:
   mongodb:
     # DS1019+ (Celeron J4125 etc.) has no AVX — MongoDB 5+ will not start. Use 4.4.
-    image: mongo:4.4
+    image: mongo:4.4.29
     container_name: ryder-mongodb
     hostname: ryder-mongodb
     restart: unless-stopped
+    command: ['mongod', '--wiredTigerCacheSizeGB', '0.5']
     environment:
       MONGO_INITDB_DATABASE: ryder
     volumes:

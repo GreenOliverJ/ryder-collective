@@ -10,10 +10,24 @@ Production compose uses **`mongo:4.4`** on purpose. Pull latest and recreate:
 ```bash
 git pull
 sudo docker compose -f docker-compose.prod.yml --env-file .env.production down
-sudo rm -rf data/mongo/*    # old failed 5.x data
+sudo rm -rf data/mongo/*    # required — old Mongo 7 data breaks 4.4 (exit code 100)
 sudo chown -R 999:999 data/mongo
 sudo docker compose -f docker-compose.prod.yml --env-file .env.production up -d --build
 ```
+
+### Still `exitCode 100`?
+
+See the **first** log lines (not just `--tail 10`):
+
+```bash
+sudo docker logs ryder-mongodb 2>&1 | head -40
+sudo docker inspect ryder-mongodb --format '{{.Config.Image}}'
+```
+
+Image must be `mongo:4.4` (not `mongo:7`).  
+If image is correct and data was wiped, check free disk/RAM on the NAS.
+
+---
 
 ---
 
