@@ -1,5 +1,5 @@
 <template>
-  <q-page class="q-pa-md">
+  <q-page class="q-pa-md stage-view-page">
     <q-inner-loading :showing="store.loading" />
 
     <q-banner v-if="store.loadError" class="bg-negative text-white q-mb-md" rounded>
@@ -94,34 +94,28 @@
         />
       </div>
 
-      <div class="row q-col-gutter-md stage-page-layout">
-        <div class="col-12 col-lg-8 stage-page-layout__main">
-          <q-card flat bordered class="bg-dark q-pa-md stage-page-layout__stage">
-            <div class="row items-center q-mb-md">
-              <div class="text-subtitle1 col">
-                Stage layout
-              </div>
-              <q-btn outline size="sm" icon="person_add" label="Add musician" @click="onAddMusician" />
+      <div class="stage-page-layout">
+        <q-card flat bordered class="bg-dark q-pa-md stage-page-layout__stage">
+          <div class="row items-center q-mb-md">
+            <div class="text-subtitle1 col">
+              Stage layout
             </div>
-            <div class="flex flex-center">
-              <StageCanvas
-                :musicians="store.musicians"
-                :selected-id="store.selectedMusicianId"
-                :width="store.rider.stage?.width || 800"
-                :height="store.rider.stage?.height || 500"
-                :audience-side="store.rider.stage?.audienceSide || 'bottom'"
-                editable
-                @select="onSelectMusician"
-                @move="({ id, position }) => store.moveMusician(id, position)"
-                @deselect="store.selectedMusicianId = null"
-              />
-            </div>
-          </q-card>
+            <q-btn outline size="sm" icon="person_add" label="Add musician" @click="onAddMusician" />
+          </div>
+          <StageCanvas
+            :musicians="store.musicians"
+            :selected-id="store.selectedMusicianId"
+            :width="store.rider.stage?.width || 800"
+            :height="store.rider.stage?.height || 500"
+            :audience-side="store.rider.stage?.audienceSide || 'bottom'"
+            editable
+            @select="onSelectMusician"
+            @move="({ id, position }) => store.moveMusician(id, position)"
+            @deselect="store.selectedMusicianId = null"
+          />
+        </q-card>
 
-          <EditorAudioSection class="q-mt-md stage-page-layout__audio" />
-        </div>
-
-        <div ref="musicianPanelRef" class="col-12 col-lg-4 stage-page-layout__panel">
+        <div ref="musicianPanelRef" class="stage-page-layout__panel">
           <q-card flat bordered class="bg-dark">
             <MusicianDetailPanel
               :musician="store.selectedMusician"
@@ -134,6 +128,8 @@
             />
           </q-card>
         </div>
+
+        <EditorAudioSection class="stage-page-layout__audio" />
       </div>
     </template>
   </q-page>

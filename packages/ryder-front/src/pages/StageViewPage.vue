@@ -12,7 +12,7 @@
     </q-header>
 
     <q-page-container>
-      <q-page class="q-pa-md">
+      <q-page class="q-pa-md stage-view-page">
         <q-inner-loading :showing="loading" />
 
         <template v-if="rider">
@@ -24,27 +24,19 @@
             {{ rider.description }}
           </p>
 
-          <div class="row q-col-gutter-md stage-page-layout">
-            <div class="col-12 col-lg-8 stage-page-layout__main">
-              <q-card flat bordered class="bg-dark q-pa-md stage-page-layout__stage">
-                <div class="flex flex-center">
-                  <StageCanvas
-                    :musicians="rider.musicians"
-                    :selected-id="selectedId"
-                    :width="rider.stage?.width || 800"
-                    :height="rider.stage?.height || 500"
-                    :audience-side="rider.stage?.audienceSide || 'bottom'"
-                    @select="onSelectMusician"
-                  />
-                </div>
-              </q-card>
-              <AudioMixerPanel
-                class="q-mt-md stage-page-layout__audio"
-                :tracks="rider.audioTracks"
+          <div class="stage-page-layout">
+            <q-card flat bordered class="bg-dark q-pa-md stage-page-layout__stage">
+              <StageCanvas
                 :musicians="rider.musicians"
+                :selected-id="selectedId"
+                :width="rider.stage?.width || 800"
+                :height="rider.stage?.height || 500"
+                :audience-side="rider.stage?.audienceSide || 'bottom'"
+                @select="onSelectMusician"
               />
-            </div>
-            <div ref="musicianPanelRef" class="col-12 col-lg-4 stage-page-layout__panel">
+            </q-card>
+
+            <div ref="musicianPanelRef" class="stage-page-layout__panel">
               <q-card flat bordered class="bg-dark">
                 <MusicianDetailPanel
                   :musician="selectedMusician"
@@ -53,6 +45,12 @@
                 />
               </q-card>
             </div>
+
+            <AudioMixerPanel
+              class="stage-page-layout__audio"
+              :tracks="rider.audioTracks"
+              :musicians="rider.musicians"
+            />
           </div>
         </template>
 

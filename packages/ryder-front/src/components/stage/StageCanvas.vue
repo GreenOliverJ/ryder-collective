@@ -1,36 +1,38 @@
 <template>
   <div class="stage-canvas">
-    <p class="stage-canvas__hint text-caption text-grey-5 text-center q-mb-sm">
+    <p class="stage-canvas__hint text-caption text-grey-5 q-mb-sm">
       Click player for more info
     </p>
-    <div
-      ref="surfaceRef"
-      class="stage-surface"
-      :style="{ width: width + 'px', height: height + 'px', maxWidth: '100%' }"
-      @click="onStageClick"
-    >
+    <div class="stage-canvas__surface-wrap">
       <div
-        class="stage-audience"
-        :class="audienceSide === 'bottom' ? 'stage-audience--bottom' : 'stage-audience--top'"
+        ref="surfaceRef"
+        class="stage-surface stage-surface--responsive"
+        :style="surfaceStyle"
+        @click="onStageClick"
       >
-        Audience
-      </div>
-
-      <div
-        v-for="m in musicians"
-        :key="m.id"
-        class="musician-marker"
-        :class="{ 'musician-marker--selected': m.id === selectedId }"
-        :style="markerStyle(m)"
-        @click.stop="emit('select', m.id)"
-        @pointerdown.stop="editable && startDrag($event, m)"
-      >
-        <div class="musician-marker__dot" :style="{ background: m.color }">
-          {{ initials(m.name) }}
+        <div
+          class="stage-audience"
+          :class="audienceSide === 'bottom' ? 'stage-audience--bottom' : 'stage-audience--top'"
+        >
+          Audience
         </div>
-        <div class="musician-marker__label">
-          <span class="musician-marker__name">{{ m.name }}</span>
-          <span v-if="instrumentLine(m)" class="musician-marker__instrument">{{ instrumentLine(m) }}</span>
+
+        <div
+          v-for="m in musicians"
+          :key="m.id"
+          class="musician-marker"
+          :class="{ 'musician-marker--selected': m.id === selectedId }"
+          :style="markerStyle(m)"
+          @click.stop="emit('select', m.id)"
+          @pointerdown.stop="editable && startDrag($event, m)"
+        >
+          <div class="musician-marker__dot" :style="{ background: m.color }">
+            {{ initials(m.name) }}
+          </div>
+          <div class="musician-marker__label">
+            <span class="musician-marker__name">{{ m.name }}</span>
+            <span v-if="instrumentLine(m)" class="musician-marker__instrument">{{ instrumentLine(m) }}</span>
+          </div>
         </div>
       </div>
     </div>
@@ -38,7 +40,7 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
 import { formatInstruments } from 'src/utils/instruments'
 
 const props = defineProps({
@@ -54,6 +56,12 @@ const emit = defineEmits(['select', 'move', 'deselect'])
 
 const surfaceRef = ref(null)
 let drag = null
+
+const surfaceStyle = computed(() => ({
+  '--stage-width': `${props.width}px`,
+  '--stage-height': `${props.height}px`,
+  '--stage-aspect': `${props.width} / ${props.height}`
+}))
 
 function initials (name) {
   return (name || '?')

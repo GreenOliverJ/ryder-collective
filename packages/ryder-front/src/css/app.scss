@@ -2,6 +2,78 @@ body {
   background: #0a0e14;
 }
 
+// Prevent horizontal scroll on stage / audio views
+.stage-view-page {
+  overflow-x: hidden;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+// Grid: mobile = stage → musician card → audio; desktop = stage + audio left, panel right
+.stage-page-layout {
+  display: grid;
+  gap: 16px;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-areas:
+    'stage'
+    'panel'
+    'audio';
+
+  @media (min-width: 1024px) {
+    grid-template-columns: minmax(0, 1fr) minmax(280px, 360px);
+    grid-template-rows: auto auto;
+    grid-template-areas:
+      'stage panel'
+      'audio panel';
+    align-items: start;
+  }
+
+  &__stage,
+  &__panel,
+  &__audio {
+    min-width: 0;
+    max-width: 100%;
+  }
+
+  &__stage {
+    grid-area: stage;
+    overflow: hidden;
+  }
+
+  &__panel {
+    grid-area: panel;
+  }
+
+  &__audio {
+    grid-area: audio;
+  }
+}
+
+.stage-canvas {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.stage-canvas__hint {
+  width: 100%;
+  text-align: center;
+  letter-spacing: 0.02em;
+}
+
+.stage-canvas__surface-wrap {
+  width: 100%;
+  max-width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
 .stage-surface {
   position: relative;
   border-radius: 12px;
@@ -9,6 +81,20 @@ body {
   border: 2px solid rgba(124, 77, 255, 0.35);
   overflow: hidden;
   touch-action: none;
+  box-sizing: border-box;
+}
+
+// Desktop: fixed design size, centered; mobile: scale to card width, keep aspect ratio
+.stage-surface--responsive {
+  width: var(--stage-width, 800px);
+  height: var(--stage-height, 500px);
+  max-width: 100%;
+
+  @media (max-width: 1023px) {
+    width: 100%;
+    height: auto;
+    aspect-ratio: var(--stage-aspect, 800 / 500);
+  }
 }
 
 .stage-audience {
@@ -104,14 +190,19 @@ body {
   text-shadow: 0 1px 4px rgba(0, 0, 0, 0.8);
 }
 
-.stage-canvas__hint {
-  letter-spacing: 0.02em;
-}
-
 .audio-panel {
   border-radius: 12px;
   background: rgba(255, 255, 255, 0.04);
   border: 1px solid rgba(255, 255, 255, 0.08);
+  max-width: 100%;
+  box-sizing: border-box;
+  overflow: hidden;
+
+  audio {
+    display: block;
+    width: 100%;
+    max-width: 100%;
+  }
 }
 
 .audio-panel__item {
@@ -123,28 +214,52 @@ body {
 
 .audio-panel__musician-line {
   line-height: 1.4;
+  word-break: break-word;
 }
 
-// Mobile: musician card directly under stage, audio below
-.stage-page-layout {
-  @media (max-width: 1023px) {
-    display: flex;
-    flex-direction: column;
+@media (max-width: 599px) {
+  .stage-view-page.q-pa-md {
+    padding-left: 10px !important;
+    padding-right: 10px !important;
+  }
 
-    &__main {
-      display: contents;
-    }
+  .stage-page-layout__stage.q-pa-md {
+    padding: 10px !important;
+  }
 
-    &__stage {
-      order: 1;
-    }
+  .audio-panel {
+    padding: 10px !important;
+  }
 
-    &__panel {
-      order: 2;
-    }
+  .audio-panel__item {
+    min-height: 76px;
+    padding-top: 8px;
+    padding-bottom: 8px;
+  }
 
-    &__audio {
-      order: 3;
-    }
+  .musician-marker__dot {
+    width: 36px;
+    height: 36px;
+    font-size: 12px;
+  }
+
+  .musician-marker__name {
+    font-size: 11px;
+    max-width: 80px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .musician-marker__instrument {
+    font-size: 9px;
+    max-width: 80px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .stage-audience {
+    height: 22px;
+    font-size: 9px;
+    letter-spacing: 0.12em;
   }
 }
