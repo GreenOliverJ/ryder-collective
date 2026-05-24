@@ -16,9 +16,61 @@
 
     <q-inner-loading :showing="loading" />
 
+    <section v-if="showcase" class="q-mb-xl">
+      <div class="text-subtitle2 text-grey-5 q-mb-sm">
+        Example — always available
+      </div>
+      <div class="row q-col-gutter-md">
+        <div class="col-12 col-sm-6 col-md-4">
+          <q-card flat bordered class="bg-dark dashboard-showcase-card">
+            <q-card-section>
+              <div class="row items-center q-gutter-sm q-mb-xs">
+                <q-chip dense color="accent" text-color="white" icon="visibility">
+                  Example
+                </q-chip>
+                <q-chip dense outline color="positive" text-color="white">
+                  Published
+                </q-chip>
+              </div>
+              <div class="text-h6">
+                {{ showcase.title }}
+              </div>
+              <div v-if="showcase.bandName" class="text-caption text-grey-5">
+                {{ showcase.bandName }}
+              </div>
+              <p v-if="showcase.description" class="text-body2 text-grey-4 q-mt-sm q-mb-none">
+                {{ showcase.description }}
+              </p>
+            </q-card-section>
+            <q-separator dark />
+            <q-card-actions align="right">
+              <q-btn
+                flat
+                icon="open_in_new"
+                label="View stage"
+                :to="{ name: 'stage-public', params: { handle: showcase.handle, slug: showcase.slug } }"
+              />
+              <q-btn
+                flat
+                color="primary"
+                icon="content_copy"
+                label="Use as template"
+                :loading="cloning"
+                @click="cloneFromDemo"
+              />
+            </q-card-actions>
+          </q-card>
+        </div>
+      </div>
+    </section>
+
+    <div class="text-subtitle2 text-grey-5 q-mb-sm">
+      Your riders
+    </div>
+
     <div v-if="!loading && !riders.length" class="text-center q-pa-xl text-grey-6">
       <q-icon name="queue_music" size="64px" class="q-mb-md" />
-      <div>No riders yet. Create your first stage layout.</div>
+      <div>No riders yet. Create one or copy the example above.</div>
     </div>
 
     <div class="row q-col-gutter-md">
@@ -63,8 +115,10 @@ const auth = useAuthStore()
 const router = useRouter()
 
 const riders = ref([])
+const showcase = ref(null)
 const loading = ref(true)
 const creating = ref(false)
+const cloning = ref(false)
 
 onMounted(load)
 
@@ -73,6 +127,10 @@ async function load () {
   try {
     const { data } = await ridersApi.list()
     riders.value = data.riders
+    showcase.value = data.showcase
+    if (auth.user?.handle === data.showcase?.handle) {
+      riders.value = data.riders.filter(r => r.slug !== data.showcase.slug)
+    }
   } catch (e) {
     $q.notify({ type: 'negative', message: e.response?.data?.error || 'Failed to load riders' })
   } finally {
@@ -94,4 +152,23 @@ async function createRider () {
     creating.value = false
   }
 }
+
+async function cloneFromDemo () {
+  cloning.value = true
+  try {
+    const { data } = await ridersApi.createFromDemo()
+    $q.notify({ type: 'positive', message: 'Example copied — edit and publish when ready' })
+    router.push({ name: 'editor', params: { id: data.rider._id } })
+  } catch (e) {
+    $q.notify({ type: 'negative', message: e.response?.data?.error || 'Could not copy example' })
+  } finally {
+    cloning.value = false
+  }
+}
 </script>
+
+<style scoped>
+.dashboard-showcase-card {
+  box-shadow: 0 0 0 1px rgba(124, 77, 255, 0.45);
+}
+</style>

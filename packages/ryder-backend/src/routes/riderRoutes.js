@@ -2,6 +2,7 @@ import { Router } from 'express'
 import { asyncHandler } from '../utils/asyncHandler.js'
 import { requireAuth } from '../middleware/auth.js'
 import { riderService } from '../services/riderService.js'
+import { demoService } from '../services/demoService.js'
 import { createRiderSchema, updateRiderSchema } from '../validators/riderSchemas.js'
 
 const router = Router()
@@ -10,7 +11,15 @@ router.use(requireAuth)
 
 router.get('/', asyncHandler(async (req, res) => {
   const riders = await riderService.listForUser(req.userId)
-  res.json({ riders })
+  res.json({ riders, showcase: demoService.getShowcaseMeta() })
+}))
+
+router.post('/from-demo', asyncHandler(async (req, res) => {
+  const rider = await demoService.cloneForUser(req.userId)
+  res.status(201).json({
+    rider,
+    urls: riderService.getPublicUrls(req.user.handle, rider)
+  })
 }))
 
 router.post('/', asyncHandler(async (req, res) => {
