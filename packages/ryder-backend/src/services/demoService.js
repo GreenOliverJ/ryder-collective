@@ -9,7 +9,9 @@ import {
   getDemoRiderFields,
   getDemoShowcaseMeta
 } from '../data/demoRider.js'
+import { copyDemoAssetsToUploads } from '../data/demoAssets.js'
 import { riderRepository } from '../repositories/riderRepository.js'
+import { uploadService } from './uploadService.js'
 import { toSlug, uniquePublicId } from '../utils/slug.js'
 
 export const demoService = {
@@ -18,6 +20,8 @@ export const demoService = {
   },
 
   async ensureDemoSeed () {
+    await copyDemoAssetsToUploads(uploadService.getUploadPath())
+
     let user = await User.findOne({ email: DEMO_EMAIL })
     if (!user) {
       user = await User.create({
