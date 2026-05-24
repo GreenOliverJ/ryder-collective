@@ -1,31 +1,37 @@
 <template>
-  <div
-    ref="surfaceRef"
-    class="stage-surface"
-    :style="{ width: width + 'px', height: height + 'px', maxWidth: '100%' }"
-    @click="onStageClick"
-  >
+  <div class="stage-canvas">
+    <p class="stage-canvas__hint text-caption text-grey-5 text-center q-mb-sm">
+      Click player for more info
+    </p>
     <div
-      class="stage-audience"
-      :class="audienceSide === 'bottom' ? 'stage-audience--bottom' : 'stage-audience--top'"
+      ref="surfaceRef"
+      class="stage-surface"
+      :style="{ width: width + 'px', height: height + 'px', maxWidth: '100%' }"
+      @click="onStageClick"
     >
-      Audience
-    </div>
-
-    <div
-      v-for="m in musicians"
-      :key="m.id"
-      class="musician-marker"
-      :class="{ 'musician-marker--selected': m.id === selectedId }"
-      :style="markerStyle(m)"
-      @click.stop="emit('select', m.id)"
-      @pointerdown.stop="editable && startDrag($event, m)"
-    >
-      <div class="musician-marker__dot" :style="{ background: m.color }">
-        {{ initials(m.name) }}
+      <div
+        class="stage-audience"
+        :class="audienceSide === 'bottom' ? 'stage-audience--bottom' : 'stage-audience--top'"
+      >
+        Audience
       </div>
-      <div class="musician-marker__label">
-        {{ m.name }}
+
+      <div
+        v-for="m in musicians"
+        :key="m.id"
+        class="musician-marker"
+        :class="{ 'musician-marker--selected': m.id === selectedId }"
+        :style="markerStyle(m)"
+        @click.stop="emit('select', m.id)"
+        @pointerdown.stop="editable && startDrag($event, m)"
+      >
+        <div class="musician-marker__dot" :style="{ background: m.color }">
+          {{ initials(m.name) }}
+        </div>
+        <div class="musician-marker__label">
+          <span class="musician-marker__name">{{ m.name }}</span>
+          <span v-if="instrumentLine(m)" class="musician-marker__instrument">{{ instrumentLine(m) }}</span>
+        </div>
       </div>
     </div>
   </div>
@@ -33,6 +39,7 @@
 
 <script setup>
 import { ref } from 'vue'
+import { formatInstruments } from 'src/utils/instruments'
 
 const props = defineProps({
   musicians: { type: Array, default: () => [] },
@@ -55,6 +62,12 @@ function initials (name) {
     .join('')
     .slice(0, 2)
     .toUpperCase()
+}
+
+function instrumentLine (m) {
+  const line = formatInstruments(m.instrument)
+  if (line && m.role) return `${line} · ${m.role}`
+  return line || m.role || ''
 }
 
 function markerStyle (m) {

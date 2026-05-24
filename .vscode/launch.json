@@ -1,0 +1,22 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "Ryder Dev",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["run", "dev"],
+      "cwd": "${workspaceFolder}",
+      "console": "integratedTerminal",
+      "preLaunchTask": "Docker: Up"
+    },
+    {
+      "type": "node-terminal",
+      "request": "launch",
+      "name": "Docker: MongoDB",
+      "command": "docker compose up -d",
+      "cwd": "${workspaceFolder}"
+    }
+  ]
+}

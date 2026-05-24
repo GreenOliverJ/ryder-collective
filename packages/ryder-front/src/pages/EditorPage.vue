@@ -44,13 +44,24 @@
         </span>
       </q-banner>
 
+      <div class="text-subtitle2 q-mb-sm">
+        Band &amp; gig info
+      </div>
       <div class="row q-col-gutter-sm q-mb-md">
         <q-input
           v-model="store.rider.bandName"
           dense
           filled
           label="Band name"
-          class="col-12 col-sm-4"
+          class="col-12 col-sm-6 col-md-3"
+          @update:model-value="store.markDirty()"
+        />
+        <q-input
+          v-model="store.rider.genre"
+          dense
+          filled
+          label="Genre"
+          class="col-12 col-sm-6 col-md-3"
           @update:model-value="store.markDirty()"
         />
         <q-input
@@ -59,27 +70,38 @@
           filled
           label="URL slug"
           hint="Used in public link"
-          class="col-12 col-sm-4"
+          class="col-12 col-sm-6 col-md-3"
           @update:model-value="store.markDirty()"
         />
         <q-input
           v-model="store.rider.description"
           dense
           filled
-          label="Description"
-          class="col-12 col-sm-4"
+          label="Gig description"
+          class="col-12 col-sm-6 col-md-3"
+          @update:model-value="store.markDirty()"
+        />
+        <q-input
+          v-model="store.rider.bandInfo"
+          type="textarea"
+          autogrow
+          dense
+          filled
+          label="General band info"
+          hint="Lineup, contact, notes for the crew"
+          class="col-12"
           @update:model-value="store.markDirty()"
         />
       </div>
 
-      <div class="row q-col-gutter-md">
-        <div class="col-12 col-lg-8">
-          <q-card flat bordered class="bg-dark q-pa-md">
+      <div class="row q-col-gutter-md stage-page-layout">
+        <div class="col-12 col-lg-8 stage-page-layout__main">
+          <q-card flat bordered class="bg-dark q-pa-md stage-page-layout__stage">
             <div class="row items-center q-mb-md">
               <div class="text-subtitle1 col">
                 Stage layout
               </div>
-              <q-btn outline size="sm" icon="person_add" label="Add musician" @click="store.addMusician()" />
+              <q-btn outline size="sm" icon="person_add" label="Add musician" @click="onAddMusician" />
             </div>
             <div class="flex flex-center">
               <StageCanvas
@@ -89,21 +111,23 @@
                 :height="store.rider.stage?.height || 500"
                 :audience-side="store.rider.stage?.audienceSide || 'bottom'"
                 editable
-                @select="id => (store.selectedMusicianId = id)"
+                @select="onSelectMusician"
                 @move="({ id, position }) => store.moveMusician(id, position)"
                 @deselect="store.selectedMusicianId = null"
               />
             </div>
           </q-card>
 
-          <EditorAudioSection class="q-mt-md" />
+          <EditorAudioSection class="q-mt-md stage-page-layout__audio" />
         </div>
 
-        <div class="col-12 col-lg-4">
+        <div ref="musicianPanelRef" class="col-12 col-lg-4 stage-page-layout__panel">
           <q-card flat bordered class="bg-dark">
             <MusicianDetailPanel
               :musician="store.selectedMusician"
+              :tracks="store.audioTracks"
               editable
+              selected
               @update="patch => store.selectedMusician && store.updateMusician(store.selectedMusician.id, patch)"
               @remove="store.selectedMusician && store.removeMusician(store.selectedMusician.id)"
               @close="store.selectedMusicianId = null"
@@ -116,7 +140,7 @@
 </template>
 
 <script setup>
-import { onMounted, watch } from 'vue'
+import { onMounted, ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import { useQuasar } from 'quasar'
 import { useAuthStore } from 'src/stores/auth-store'
@@ -129,6 +153,7 @@ const route = useRoute()
 const $q = useQuasar()
 const auth = useAuthStore()
 const store = useRiderEditorStore()
+const musicianPanelRef = ref(null)
 
 onMounted(() => loadRider())
 
@@ -139,6 +164,24 @@ async function loadRider () {
     await store.load(route.params.id)
   } catch {
     // loadError shown in template
+  }
+}
+
+function onSelectMusician (id) {
+  store.selectedMusicianId = id
+  if ($q.screen.lt.lg) {
+    requestAnimationFrame(() => {
+      musicianPanelRef.value?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+    })
+  }
+}
+
+function onAddMusician () {
+  store.addMusician()
+  if ($q.screen.lt.lg) {
+    requestAnimationFrame(() => {
+      musicianPanelRef.value?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+    })
   }
 }
 

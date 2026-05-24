@@ -48,6 +48,8 @@ export const useRiderEditorStore = defineStore('riderEditor', () => {
         title: rider.value.title,
         slug: rider.value.slug,
         bandName: rider.value.bandName,
+        genre: rider.value.genre,
+        bandInfo: rider.value.bandInfo,
         description: rider.value.description,
         isPublished: rider.value.isPublished,
         stage: rider.value.stage,
@@ -74,6 +76,7 @@ export const useRiderEditorStore = defineStore('riderEditor', () => {
       technicalNeeds: [],
       soundRequirements: '',
       monitorMix: '',
+      usesInEar: false,
       color: '#7c4dff',
       notes: ''
     }

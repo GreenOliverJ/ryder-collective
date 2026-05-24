@@ -16,13 +16,17 @@
         <q-inner-loading :showing="loading" />
 
         <template v-if="rider">
+          <BandInfoSection
+            :genre="rider.genre"
+            :band-info="rider.bandInfo"
+          />
           <p v-if="rider.description" class="text-body2 text-grey-5 q-mb-md">
             {{ rider.description }}
           </p>
 
-          <div class="row q-col-gutter-md">
-            <div class="col-12 col-lg-8">
-              <q-card flat bordered class="bg-dark q-pa-md">
+          <div class="row q-col-gutter-md stage-page-layout">
+            <div class="col-12 col-lg-8 stage-page-layout__main">
+              <q-card flat bordered class="bg-dark q-pa-md stage-page-layout__stage">
                 <div class="flex flex-center">
                   <StageCanvas
                     :musicians="rider.musicians"
@@ -30,19 +34,23 @@
                     :width="rider.stage?.width || 800"
                     :height="rider.stage?.height || 500"
                     :audience-side="rider.stage?.audienceSide || 'bottom'"
-                    @select="selectedId = $event"
+                    @select="onSelectMusician"
                   />
                 </div>
               </q-card>
               <AudioMixerPanel
-                class="q-mt-md"
+                class="q-mt-md stage-page-layout__audio"
                 :tracks="rider.audioTracks"
                 :musicians="rider.musicians"
               />
             </div>
-            <div class="col-12 col-lg-4">
+            <div ref="musicianPanelRef" class="col-12 col-lg-4 stage-page-layout__panel">
               <q-card flat bordered class="bg-dark">
-                <MusicianDetailPanel :musician="selectedMusician" />
+                <MusicianDetailPanel
+                  :musician="selectedMusician"
+                  :tracks="rider.audioTracks"
+                  selected
+                />
               </q-card>
             </div>
           </div>
@@ -64,16 +72,20 @@
 <script setup>
 import { computed, onMounted, ref } from 'vue'
 import { useRoute } from 'vue-router'
+import { useQuasar } from 'quasar'
 import { publicApi } from 'src/services/public-api'
 import StageCanvas from 'src/components/stage/StageCanvas.vue'
 import AudioMixerPanel from 'src/components/stage/AudioMixerPanel.vue'
 import MusicianDetailPanel from 'src/components/stage/MusicianDetailPanel.vue'
+import BandInfoSection from 'src/components/stage/BandInfoSection.vue'
 
 const route = useRoute()
+const $q = useQuasar()
 const loading = ref(true)
 const rider = ref(null)
 const owner = ref(null)
 const selectedId = ref(null)
+const musicianPanelRef = ref(null)
 
 const title = computed(() => {
   if (!rider.value) return 'Stage'
@@ -99,6 +111,15 @@ async function load () {
     rider.value = null
   } finally {
     loading.value = false
+  }
+}
+
+function onSelectMusician (id) {
+  selectedId.value = id
+  if ($q.screen.lt.lg) {
+    requestAnimationFrame(() => {
+      musicianPanelRef.value?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+    })
   }
 }
 </script>

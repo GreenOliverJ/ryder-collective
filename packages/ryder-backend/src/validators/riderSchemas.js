@@ -14,6 +14,7 @@ const musicianSchema = z.object({
   technicalNeeds: z.array(z.string()).optional().default([]),
   soundRequirements: z.string().optional().default(''),
   monitorMix: z.string().optional().default(''),
+  usesInEar: z.boolean().optional().default(false),
   color: z.string().optional().default('#7c4dff'),
   notes: z.string().optional().default('')
 })
@@ -38,6 +39,8 @@ export const createRiderSchema = z.object({
   title: z.string().min(1).max(120),
   slug: z.string().min(1).max(80).optional(),
   bandName: z.string().max(120).optional(),
+  genre: z.string().max(120).optional(),
+  bandInfo: z.string().max(2000).optional(),
   description: z.string().max(2000).optional()
 })
 
@@ -45,6 +48,8 @@ export const updateRiderSchema = z.object({
   title: z.string().min(1).max(120).optional(),
   slug: z.string().min(1).max(80).optional(),
   bandName: z.string().max(120).optional(),
+  genre: z.string().max(120).optional(),
+  bandInfo: z.string().max(2000).optional(),
   description: z.string().max(2000).optional(),
   isPublished: z.boolean().optional(),
   stage: stageSchema.optional(),

@@ -44,6 +44,21 @@ body {
 
 .musician-marker--selected {
   z-index: 3;
+
+  .musician-marker__dot {
+    border-color: #fff;
+    border-width: 3px;
+    box-shadow:
+      0 0 0 3px rgba(124, 77, 255, 0.9),
+      0 0 20px rgba(124, 77, 255, 0.55),
+      0 4px 16px rgba(0, 0, 0, 0.45);
+    transform: scale(1.12);
+  }
+
+  .musician-marker__name {
+    color: #fff;
+    font-weight: 700;
+  }
 }
 
 .musician-marker__dot {
@@ -58,6 +73,7 @@ body {
   color: #fff;
   border: 2px solid rgba(255, 255, 255, 0.85);
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.45);
+  transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
 }
 
 .musician-marker__label {
@@ -65,16 +81,70 @@ body {
   top: 100%;
   left: 50%;
   transform: translateX(-50%);
-  margin-top: 4px;
-  white-space: nowrap;
-  font-size: 11px;
-  color: rgba(255, 255, 255, 0.85);
-  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.8);
+  margin-top: 6px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
   pointer-events: none;
+  text-align: center;
+}
+
+.musician-marker__name {
+  white-space: nowrap;
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.9);
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.8);
+}
+
+.musician-marker__instrument {
+  white-space: nowrap;
+  font-size: 10px;
+  color: rgba(255, 255, 255, 0.55);
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.8);
+}
+
+.stage-canvas__hint {
+  letter-spacing: 0.02em;
 }
 
 .audio-panel {
   border-radius: 12px;
   background: rgba(255, 255, 255, 0.04);
   border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.audio-panel__item {
+  min-height: 88px;
+  padding-top: 12px;
+  padding-bottom: 12px;
+  align-items: flex-start;
+}
+
+.audio-panel__musician-line {
+  line-height: 1.4;
+}
+
+// Mobile: musician card directly under stage, audio below
+.stage-page-layout {
+  @media (max-width: 1023px) {
+    display: flex;
+    flex-direction: column;
+
+    &__main {
+      display: contents;
+    }
+
+    &__stage {
+      order: 1;
+    }
+
+    &__panel {
+      order: 2;
+    }
+
+    &__audio {
+      order: 3;
+    }
+  }
 }

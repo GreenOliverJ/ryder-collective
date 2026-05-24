@@ -15,6 +15,7 @@ const musicianSchema = new mongoose.Schema(
     technicalNeeds: [{ type: String }],
     soundRequirements: { type: String, default: '' },
     monitorMix: { type: String, default: '' },
+    usesInEar: { type: Boolean, default: false },
     color: { type: String, default: '#7c4dff' },
     notes: { type: String, default: '' }
   },
@@ -49,6 +50,8 @@ const riderSchema = new mongoose.Schema(
     title: { type: String, required: true, trim: true },
     slug: { type: String, required: true, trim: true, lowercase: true },
     bandName: { type: String, default: '', trim: true },
+    genre: { type: String, default: '', trim: true },
+    bandInfo: { type: String, default: '' },
     description: { type: String, default: '' },
     isPublished: { type: Boolean, default: false },
     stage: { type: stageSchema, default: () => ({}) },

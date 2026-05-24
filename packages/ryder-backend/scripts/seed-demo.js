@@ -22,7 +22,7 @@ async function seed () {
   const slug = 'demo-gig'
   let rider = await Rider.findOne({ ownerId: user._id, slug })
   if (!rider) {
-    const m1 = { id: 'm1', name: 'Alex', instrument: 'Vocals', role: 'Lead', position: { x: 50, y: 35 }, technicalNeeds: ['SM58', 'DI for tracks'], soundRequirements: 'Warm vocal, light reverb', monitorMix: 'Vox + click L, music R', color: '#7c4dff', notes: '' }
+    const m1 = { id: 'm1', name: 'Alex', instrument: 'Vocals', role: 'Lead', position: { x: 50, y: 35 }, technicalNeeds: ['SM58', 'DI for tracks'], soundRequirements: 'Warm vocal, light reverb', monitorMix: 'Vox + click L, music R', usesInEar: true, color: '#7c4dff', notes: '' }
     const m2 = { id: 'm2', name: 'Jordan', instrument: 'Guitar', role: 'Lead', position: { x: 30, y: 55 }, technicalNeeds: ['SM57 on amp', 'TU3 DI'], soundRequirements: 'Crunch rhythm, solo boost +2dB', monitorMix: 'Guitar center', color: '#26a69a', notes: '' }
     const m3 = { id: 'm3', name: 'Sam', instrument: 'Keys', role: '', position: { x: 70, y: 55 }, technicalNeeds: ['Stereo DI', 'Power strip'], soundRequirements: 'Stereo keys, pad under vocals', monitorMix: 'Keys + vox', color: '#ff6b35', notes: '' }
 
@@ -31,6 +31,8 @@ async function seed () {
       title: 'Demo Night',
       slug,
       bandName: 'The Ryder Collective',
+      genre: 'Indie rock',
+      bandInfo: '3-piece with playback tracks. Stage power on SR.',
       description: 'Example published tech rider — tap musicians and explore the layout.',
       isPublished: true,
       publicId: uniquePublicId(),
