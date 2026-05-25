@@ -46,11 +46,33 @@
         @update:model-value="sync"
       />
       <q-input v-model="local.role" dense filled label="Role" class="q-mb-sm" @update:model-value="sync" />
-      <q-input v-model="local.color" dense filled label="Marker color" class="q-mb-sm" @update:model-value="sync">
-        <template #append>
-          <input v-model="local.color" type="color" class="color-input" @input="sync">
-        </template>
-      </q-input>
+      <div class="color-field q-mb-sm">
+        <div class="text-caption text-grey-5 q-mb-xs">
+          Marker color
+        </div>
+        <div class="row no-wrap items-center q-gutter-sm">
+          <q-input
+            v-model="local.color"
+            dense
+            filled
+            class="col"
+            hide-bottom-space
+            @update:model-value="sync"
+          />
+          <label class="color-picker" title="Pick marker color">
+            <span
+              class="color-picker__swatch"
+              :style="{ background: pickerColor }"
+            />
+            <input
+              type="color"
+              class="color-picker__input"
+              :value="pickerColor"
+              @input="onColorInput"
+            >
+          </label>
+        </div>
+      </div>
       <q-input
         v-model="techNeedsText"
         type="textarea"
@@ -184,6 +206,11 @@ const initials = computed(() =>
 
 const instruments = computed(() => parseInstruments(props.musician?.instrument))
 
+const pickerColor = computed(() => {
+  const c = local.value.color
+  return typeof c === 'string' && /^#[0-9A-Fa-f]{6}$/.test(c) ? c : '#7c4dff'
+})
+
 const musicianTracks = computed(() =>
   props.tracks.filter(t => t.musicianId === props.musician?.id && resolveAudioUrl(t.url))
 )
@@ -200,6 +227,11 @@ watch(
 
 function sync () {
   emit('update', { ...local.value })
+}
+
+function onColorInput (event) {
+  local.value.color = event.target.value
+  sync()
 }
 
 function syncTech () {
@@ -222,12 +254,36 @@ function onPlay (activeId) {
 </script>
 
 <style scoped>
-.color-input {
-  width: 36px;
-  height: 28px;
-  border: none;
-  background: transparent;
+.color-picker {
+  flex-shrink: 0;
+  display: block;
+  width: 40px;
+  height: 40px;
+  position: relative;
   cursor: pointer;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.color-picker__swatch {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  border-radius: 4px;
+  box-sizing: border-box;
+  pointer-events: none;
+}
+
+.color-picker__input {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  border: none;
+  cursor: pointer;
+  opacity: 0;
 }
 
 .musician-detail-panel {
