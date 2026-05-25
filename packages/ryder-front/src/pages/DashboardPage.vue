@@ -96,6 +96,14 @@
               icon="open_in_new"
               :to="{ name: 'stage-public', params: { handle: auth.user?.handle, slug: r.slug } }"
             />
+            <q-btn
+              flat
+              color="negative"
+              icon="delete"
+              :loading="deletingId === r._id"
+              :disable="!!deletingId"
+              @click="confirmDelete(r)"
+            />
           </q-card-actions>
         </q-card>
       </div>
@@ -119,6 +127,7 @@ const showcase = ref(null)
 const loading = ref(true)
 const creating = ref(false)
 const cloning = ref(false)
+const deletingId = ref(null)
 
 onMounted(load)
 
@@ -163,6 +172,30 @@ async function cloneFromDemo () {
     $q.notify({ type: 'negative', message: e.response?.data?.error || 'Could not copy example' })
   } finally {
     cloning.value = false
+  }
+}
+
+function confirmDelete (rider) {
+  const label = rider.bandName ? `${rider.title} (${rider.bandName})` : rider.title
+  $q.dialog({
+    title: 'Delete rider?',
+    message: `"${label}" will be permanently removed. This cannot be undone.`,
+    cancel: { label: 'Cancel', flat: true, color: 'grey-5' },
+    ok: { label: 'Delete', color: 'negative', unelevated: true },
+    persistent: true
+  }).onOk(() => deleteRider(rider))
+}
+
+async function deleteRider (rider) {
+  deletingId.value = rider._id
+  try {
+    await ridersApi.remove(rider._id)
+    riders.value = riders.value.filter(r => r._id !== rider._id)
+    $q.notify({ type: 'positive', message: 'Rider deleted' })
+  } catch (e) {
+    $q.notify({ type: 'negative', message: e.response?.data?.error || 'Could not delete rider' })
+  } finally {
+    deletingId.value = null
   }
 }
 </script>
