@@ -24,7 +24,7 @@
             {{ rider.description }}
           </p>
 
-          <div class="stage-page-layout">
+          <div class="stage-page-layout stage-page-layout--with-needs">
             <q-card flat bordered class="bg-dark q-pa-md stage-page-layout__stage">
               <StageCanvas
                 :musicians="rider.musicians"
@@ -49,6 +49,11 @@
             <AudioMixerPanel
               class="stage-page-layout__audio"
               :tracks="rider.audioTracks"
+              :musicians="rider.musicians"
+            />
+
+            <MusicianNeedsOverview
+              class="stage-page-layout__needs"
               :musicians="rider.musicians"
             />
           </div>
@@ -76,6 +81,7 @@ import StageCanvas from 'src/components/stage/StageCanvas.vue'
 import AudioMixerPanel from 'src/components/stage/AudioMixerPanel.vue'
 import MusicianDetailPanel from 'src/components/stage/MusicianDetailPanel.vue'
 import BandInfoSection from 'src/components/stage/BandInfoSection.vue'
+import MusicianNeedsOverview from 'src/components/stage/MusicianNeedsOverview.vue'
 
 const route = useRoute()
 const $q = useQuasar()

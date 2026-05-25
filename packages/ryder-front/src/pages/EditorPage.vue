@@ -94,7 +94,7 @@
         />
       </div>
 
-      <div class="stage-page-layout">
+      <div class="stage-page-layout stage-page-layout--with-needs">
         <q-card flat bordered class="bg-dark q-pa-md stage-page-layout__stage">
           <div class="row items-center q-mb-md">
             <div class="text-subtitle1 col">
@@ -130,6 +130,11 @@
         </div>
 
         <EditorAudioSection class="stage-page-layout__audio" />
+
+        <MusicianNeedsOverview
+          class="stage-page-layout__needs"
+          :musicians="store.musicians"
+        />
       </div>
     </template>
   </q-page>
@@ -144,6 +149,7 @@ import { useRiderEditorStore } from 'src/stores/rider-editor-store'
 import StageCanvas from 'src/components/stage/StageCanvas.vue'
 import MusicianDetailPanel from 'src/components/stage/MusicianDetailPanel.vue'
 import EditorAudioSection from 'src/components/editor/EditorAudioSection.vue'
+import MusicianNeedsOverview from 'src/components/stage/MusicianNeedsOverview.vue'
 
 const route = useRoute()
 const $q = useQuasar()
