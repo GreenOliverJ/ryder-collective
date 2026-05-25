@@ -1,7 +1,14 @@
 <template>
-  <q-page class="q-pa-xl">
+  <q-page class="q-pa-xl index-page">
     <div class="row q-col-gutter-xl items-center">
       <div class="col-12 col-md-6">
+        <img
+          src="/logo.png"
+          alt="Ryder"
+          class="index-page__logo q-mb-lg"
+          width="160"
+          height="160"
+        >
         <div class="text-h3 text-weight-bold q-mb-md">
           Tech riders, on stage
         </div>
@@ -46,3 +53,12 @@
 import { useAuthStore } from 'src/stores/auth-store'
 const auth = useAuthStore()
 </script>
+
+<style scoped>
+.index-page__logo {
+  display: block;
+  width: 160px;
+  height: 160px;
+  object-fit: contain;
+}
+</style>

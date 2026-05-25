@@ -2,10 +2,10 @@
   <q-layout view="hHh lpR lFf" class="bg-dark-page">
     <q-header elevated class="bg-dark">
       <q-toolbar>
-        <q-btn flat dense round icon="music_note" to="/" aria-label="Home" />
-        <q-toolbar-title class="text-weight-bold">
-          Ryder
-        </q-toolbar-title>
+        <router-link to="/" class="main-layout__brand" aria-label="Home">
+          <img src="/logo.png" alt="" class="main-layout__logo" width="36" height="36">
+          <span class="text-weight-bold">Ryder</span>
+        </router-link>
         <q-space />
         <template v-if="auth.isAuthenticated">
           <q-btn flat label="My riders" to="/dashboard" />
@@ -39,3 +39,21 @@ function onLogout () {
   router.push({ name: 'home' })
 }
 </script>
+
+<style scoped>
+.main-layout__brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;
+  color: inherit;
+  margin-right: 8px;
+}
+
+.main-layout__logo {
+  width: 36px;
+  height: 36px;
+  object-fit: contain;
+  flex-shrink: 0;
+}
+</style>
