@@ -19,17 +19,23 @@ export const emailService = {
 
     ensureConfigured()
 
-    await sendgrid.send({
-      to,
-      from: env.sendgridFromEmail,
-      subject: 'Reset your password',
-      text: `Reset your password using this link: ${resetUrl}`,
-      html: `
-        <p>You requested a password reset.</p>
-        <p><a href="${resetUrl}">Click here to reset your password</a></p>
-        <p>If you didn't request this, you can ignore this email.</p>
-      `
-    })
+    try {
+      await sendgrid.send({
+        to,
+        from: env.sendgridFromEmail,
+        subject: 'Reset your password',
+        text: `Reset your password using this link: ${resetUrl}`,
+        html: `
+          <p>You requested a password reset.</p>
+          <p><a href="${resetUrl}">Click here to reset your password</a></p>
+          <p>If you didn't request this, you can ignore this email.</p>
+        `
+      })
+      if (env.isDev) console.log('[password-reset] SendGrid accepted message for:', to)
+    } catch (err) {
+      console.error('[password-reset] SendGrid send failed:', err?.response?.body || err?.message || err)
+      throw err
+    }
   }
 }
 

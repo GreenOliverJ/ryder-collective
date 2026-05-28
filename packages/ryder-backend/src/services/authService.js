@@ -80,7 +80,10 @@ export const authService = {
     const user = await userRepository.findByEmail(normalizedEmail)
 
     // Always respond "ok" (avoid user enumeration).
-    if (!user) return { ok: true }
+    if (!user) {
+      if (env.isDev) console.log('[password-reset] requested for non-existent email:', normalizedEmail)
+      return { ok: true }
+    }
 
     const token = crypto.randomBytes(32).toString('hex')
     const tokenHash = sha256(token)
@@ -89,6 +92,7 @@ export const authService = {
     await userRepository.setPasswordResetToken({ userId: user._id, tokenHash, expiresAt })
 
     const resetUrl = `${env.appWebUrl.replace(/\/$/, '')}/reset-password?token=${encodeURIComponent(token)}`
+    if (env.isDev) console.log('[password-reset] issuing reset link for', normalizedEmail, '->', resetUrl)
     await emailService.sendPasswordResetEmail({ to: normalizedEmail, resetUrl })
 
     return { ok: true }
