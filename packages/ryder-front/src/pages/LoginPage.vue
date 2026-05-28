@@ -9,6 +9,11 @@
         <q-input v-model="password" type="password" label="Password" filled dense class="q-mb-lg" :rules="[v => !!v || 'Required']" />
         <q-btn type="submit" unelevated color="primary" class="full-width" label="Log in" :loading="loading" />
       </q-form>
+      <div class="text-center q-mt-md">
+        <router-link to="/forgot-password" class="text-primary">
+          Forgot password?
+        </router-link>
+      </div>
       <div class="text-center q-mt-md text-grey-5">
         No account?
         <router-link to="/register" class="text-primary">
