@@ -1,11 +1,17 @@
 import bcrypt from 'bcryptjs'
 import jwt from 'jsonwebtoken'
+import crypto from 'crypto'
 import { env } from '../config/env.js'
 import { userRepository } from '../repositories/userRepository.js'
 import { toSlug } from '../utils/slug.js'
+import { emailService } from './emailService.js'
 
 function signToken (userId) {
   return jwt.sign({ sub: userId }, env.jwtSecret, { expiresIn: env.jwtExpiresIn })
+}
+
+function sha256 (value) {
+  return crypto.createHash('sha256').update(value).digest('hex')
 }
 
 export const authService = {
@@ -67,6 +73,43 @@ export const authService = {
       throw err
     }
     return user
+  },
+
+  async requestPasswordReset ({ email }) {
+    const normalizedEmail = email.toLowerCase()
+    const user = await userRepository.findByEmail(normalizedEmail)
+
+    // Always respond "ok" (avoid user enumeration).
+    if (!user) return { ok: true }
+
+    const token = crypto.randomBytes(32).toString('hex')
+    const tokenHash = sha256(token)
+    const expiresAt = new Date(Date.now() + 1000 * 60 * 30) // 30 minutes
+
+    await userRepository.setPasswordResetToken({ userId: user._id, tokenHash, expiresAt })
+
+    const resetUrl = `${env.appWebUrl.replace(/\/$/, '')}/reset-password?token=${encodeURIComponent(token)}`
+    await emailService.sendPasswordResetEmail({ to: normalizedEmail, resetUrl })
+
+    return { ok: true }
+  },
+
+  async resetPassword ({ token, password }) {
+    const tokenHash = sha256(token)
+    const user = await userRepository.findByValidPasswordResetTokenHash(tokenHash)
+
+    if (!user) {
+      const err = new Error('Invalid or expired reset token')
+      err.status = 400
+      throw err
+    }
+
+    user.passwordHash = await bcrypt.hash(password, 12)
+    user.passwordResetTokenHash = null
+    user.passwordResetExpiresAt = null
+    await user.save()
+
+    return { ok: true }
   },
 
   suggestHandle (displayName) {

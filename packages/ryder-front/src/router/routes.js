@@ -6,6 +6,8 @@ const routes = [
       { path: '', name: 'home', component: () => import('pages/IndexPage.vue') },
       { path: 'login', name: 'login', meta: { guestOnly: true }, component: () => import('pages/LoginPage.vue') },
       { path: 'register', name: 'register', meta: { guestOnly: true }, component: () => import('pages/RegisterPage.vue') },
+      { path: 'forgot-password', name: 'forgot-password', meta: { guestOnly: true }, component: () => import('pages/ForgotPasswordPage.vue') },
+      { path: 'reset-password', name: 'reset-password', meta: { guestOnly: true }, component: () => import('pages/ResetPasswordPage.vue') },
       {
         path: 'dashboard',
         name: 'dashboard',

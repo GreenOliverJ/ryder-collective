@@ -22,6 +22,27 @@ export const userRepository = {
     return User.findOne({ email: email.toLowerCase() })
   },
 
+  async setPasswordResetToken ({ userId, tokenHash, expiresAt }) {
+    await User.updateOne(
+      { _id: userId },
+      { $set: { passwordResetTokenHash: tokenHash, passwordResetExpiresAt: expiresAt } }
+    )
+  },
+
+  async clearPasswordResetToken (userId) {
+    await User.updateOne(
+      { _id: userId },
+      { $set: { passwordResetTokenHash: null, passwordResetExpiresAt: null } }
+    )
+  },
+
+  async findByValidPasswordResetTokenHash (tokenHash) {
+    return User.findOne({
+      passwordResetTokenHash: tokenHash,
+      passwordResetExpiresAt: { $gt: new Date() }
+    })
+  },
+
   async isHandleTaken (handle, excludeId) {
     const query = { handle: handle.toLowerCase() }
     if (excludeId) query._id = { $ne: excludeId }

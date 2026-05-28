@@ -12,5 +12,8 @@ export const env = {
   jwtExpiresIn: process.env.JWT_EXPIRES_IN || '7d',
   corsOrigin: process.env.CORS_ORIGIN || 'http://localhost:9000,http://127.0.0.1:9000',
   uploadDir: process.env.UPLOAD_DIR || 'uploads',
+  appWebUrl: process.env.APP_WEB_URL || 'http://localhost:9000',
+  sendgridApiKey: process.env.SENDGRID_API_KEY || '',
+  sendgridFromEmail: process.env.SENDGRID_FROM_EMAIL || '',
   isDev: process.env.NODE_ENV !== 'production'
 }
