@@ -22,7 +22,7 @@ export const emailService = {
     try {
       await sendgrid.send({
         to,
-        from: env.sendgridFromEmail,
+        from: { email: env.sendgridFromEmail, name: env.sendgridFromName },
         subject: 'Reset your password',
         text: `Reset your password using this link: ${resetUrl}`,
         html: `

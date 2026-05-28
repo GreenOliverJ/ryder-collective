@@ -42,7 +42,11 @@ services:
       JWT_SECRET: ${JWT_SECRET}
       JWT_EXPIRES_IN: ${JWT_EXPIRES_IN:-7d}
       CORS_ORIGIN: ${PUBLIC_URL}
+      APP_WEB_URL: ${PUBLIC_URL}
       UPLOAD_DIR: uploads
+      SENDGRID_API_KEY: ${SENDGRID_API_KEY}
+      SENDGRID_FROM_EMAIL: ${SENDGRID_FROM_EMAIL}
+      SENDGRID_FROM_NAME: ${SENDGRID_FROM_NAME:-Ryder-Collective}
     volumes:
       - ./data/uploads:/app/packages/ryder-backend/uploads
     depends_on:

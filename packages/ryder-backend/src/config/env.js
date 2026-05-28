@@ -16,6 +16,7 @@ export const env = {
     || (process.env.CORS_ORIGIN ? process.env.CORS_ORIGIN.split(',')[0].trim() : '')
     || 'http://localhost:9000',
   sendgridApiKey: process.env.SENDGRID_API_KEY || '',
+  sendgridFromName: process.env.SENDGRID_FROM_NAME || 'Ryder-Collective',
   sendgridFromEmail: process.env.SENDGRID_FROM_EMAIL || '',
   isDev: process.env.NODE_ENV !== 'production'
 }
